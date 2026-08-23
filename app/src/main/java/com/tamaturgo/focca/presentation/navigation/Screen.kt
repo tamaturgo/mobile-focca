@@ -65,3 +65,16 @@ sealed class Screen(
         val tabs = listOf(Home, Routine, Achievements, History, Profile)
     }
 }
+
+/**
+ * Non-tab destinations (PRD section 4): reached by navigating from a tab screen,
+ * shown full-screen without the bottom bar (see [com.tamaturgo.focca.FoccaApp]).
+ */
+object Routes {
+    const val TodayWorkout = "today_workout"
+    const val WorkoutTimer = "workout_timer"
+    const val WorkoutCheckIn = "workout_check_in"
+    const val SplitList = "split_list"
+    const val Evolution = "evolution"
+    const val Statistics = "statistics"
+}

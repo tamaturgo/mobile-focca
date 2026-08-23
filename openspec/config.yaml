@@ -1,0 +1,97 @@
+schema: spec-driven
+
+context: |
+  ## Language policy (mandatory)
+
+  ALL generated artifacts — proposals, design docs, specs, tasks — and ALL source
+  code (identifiers, comments, KDoc, commit-adjacent text, docs) MUST be written in
+  English, regardless of the language used to discuss the work with the user. This
+  applies even when the request or conversation happens in Portuguese. Do not
+  translate this rule away for a specific change; ask the user only if a request is
+  genuinely ambiguous about scope, never about the language to write in.
+
+  ## Product
+
+  Focca (com.tamaturgo.focca) is an Android app about workout CONSISTENCY, not
+  bodybuilding. The central question every screen should reinforce is: "did you keep
+  the pace this week?". Workout building, exercises, and load progression exist to
+  support that goal, never as the goal itself. The full functional spec, screen
+  flows, logical data model, and design system live in docs/PRD.md — read it before
+  proposing any artifact that touches UI, data, or business rules.
+
+  Core business rules any proposal must respect:
+  - The A/B/C split rotation advances on COMPLETED WORKOUT (WorkoutSession), never by
+    weekday. RoutineDay is just a scheduling hint for the UI, not the source of truth.
+  - Per-set weight/reps logging is always optional; never block completing an
+    exercise or workout by requiring that data.
+  - A day with no scheduled workout is a rest state — never force a workout CTA on it.
+
+  ## Tech stack
+
+  - Kotlin 1.9 + Jetpack Compose (BOM 2024.09.00, Material 3), minSdk 26 / target 34.
+  - Hilt 2.51.1 for dependency injection (KSP, not kapt).
+  - Room 2.6.1 for local persistence (schemas exported to app/schemas via
+    room.schemaLocation).
+  - Kotlin Coroutines 1.7.3 for async work; Resource<T> (core/util/Resource.kt) is the
+    standard Loading/Success/Error wrapper between domain and presentation.
+  - No network/backend dependency in the MVP — everything is local (Room + JSON seeds
+    exercises.json / training_splits.json).
+
+  ## Architecture (Clean Architecture + MVVM, already scaffolded under app/src/main/java/com/tamaturgo/focca)
+
+  - `data/` — data layer implementation.
+    - `data/local/entity` — Room `@Entity` classes.
+    - `data/local/dao` — DAOs.
+    - `data/mapper` — entity <-> domain model conversion.
+    - `data/repository` — implementations of `domain.repository`, injected via Hilt.
+  - `domain/` — pure business layer, no Android/Room/Hilt dependency.
+    - `domain/model` — domain models.
+    - `domain/repository` — repository interfaces.
+    - `domain/usecase` — one use case per business operation; this is what the
+      ViewModel calls.
+  - `presentation/` — UI.
+    - Composables organized by feature/screen; `presentation/theme` already holds
+      Color.kt/Theme.kt/Type.kt with the design system tokens from PRD section 7.
+    - MVVM pattern: ViewModel exposes a StateFlow of UI state; the Composable only
+      observes and dispatches events, with no business logic of its own.
+  - `core/di` — Hilt modules (`DatabaseModule` provides the Room database/DAOs,
+    `RepositoryModule` `@Binds`s domain.repository -> data.repository.impl). Both
+    modules are intentionally empty until the first feature fills them in — follow
+    the example pattern already documented in each file's KDoc.
+  - `core/util` — shared utilities (e.g. Resource<T>).
+
+  Convention when proposing a new feature: create entity+dao under data/local, a
+  mapper under data/mapper, a repository impl under data/repository + interface
+  under domain/repository, use case(s) under domain/usecase, and wire everything
+  into the existing Hilt modules rather than creating new ones, unless the scope
+  genuinely justifies it.
+
+  ## Design system (see PRD section 7 for full detail)
+
+  Dark-first, no light mode in the MVP. Color tokens map to Color.kt/Theme.kt.
+  Typography: Space Grotesk (display), Inter (body), JetBrains Mono (data/labels).
+  Signature reusable components to keep as single composables: CadenceRow (7-day
+  cadence strip) and SplitBadge (A/B/C badge) — used across multiple screens, never
+  duplicate their implementation.
+
+rules:
+  proposal:
+    - Write the artifact entirely in English, even if the request was made in
+      Portuguese
+    - Reference the matching docs/PRD.md section when the change touches a screen,
+      flow, or business rule already specified there
+    - Make explicit whether the change belongs to MVP scope (PRD section 3.1) or is
+      V2+ (PRD section 3.2) — V2+ changes require explicit user confirmation before
+      proceeding
+  design:
+    - Write the artifact entirely in English, even if the request was made in
+      Portuguese
+    - Follow the existing data/domain/presentation/core package structure; do not
+      propose an architecture restructuring without explicit justification
+    - New Room entities must be added to the existing FoccaDatabase (see
+      core/di/DatabaseModule.kt), not a separate database
+  tasks:
+    - Write the artifact entirely in English, even if the request was made in
+      Portuguese
+    - Order tasks bottom-up by layer: domain -> data -> di -> presentation
+    - Each persistence task must state whether it needs a Room migration

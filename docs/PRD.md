@@ -1,209 +1,252 @@
 # PRD — Focca
 
-### App de consistência de treino (Android)
+### Workout consistency app (Android)
 
-Versão do documento: 1.0 · Documento base de desenvolvimento
+Document version: 1.0 · Base development document
 ---
 
-## 1. Visão geral
+## 1. Overview
 
-**Focca** não é um app de musculação — é um app de **hábito**. A premissa central, herdada da discussão de produto que originou este projeto, é que a maior parte dos apps de treino otimiza para o dado errado (carga, volume, PRs) quando o problema real da maioria das pessoas é **não conseguir manter a rotina**.
+**Focca** is not a bodybuilding app — it's a **habit** app. The core premise,
+inherited from the product discussion that originated this project, is that most
+workout apps optimize for the wrong metric (load, volume, PRs) when the real problem
+most people have is **not being able to stick to the routine**.
 
-O produto se organiza em torno de uma pergunta única, repetida em quase toda tela: **"você manteve o ritmo essa semana?"**. Montagem inteligente de treino, exercícios e progressão de carga existem no produto, mas como suporte a esse objetivo central — não como o objetivo em si.
+The product is organized around a single question, repeated on almost every screen:
+**"did you keep the pace this week?"**. Smart workout building, exercises, and load
+progression exist in the product, but as support for that central goal — not as the
+goal itself.
 
-### 1.1 Os quatro pilares
+### 1.1 The four pillars
 
-| Pilar | Pergunta que responde |
+| Pillar | Question it answers |
 |---|---|
-| **Rotina** | Quando eu deveria treinar? |
-| **Ação** | Eu treinei hoje? |
-| **Registro** | O que aconteceu no treino? |
-| **Evolução** | Eu estou melhorando? |
+| **Routine** | When should I train? |
+| **Action** | Did I train today? |
+| **Log** | What happened in the workout? |
+| **Progress** | Am I improving? |
 
 ---
 
-## 2. Problema e público-alvo
+## 2. Problem and target audience
 
-**Problema:** a maioria das pessoas que começa a treinar abandona não por falta de plano de treino, mas por falta de consistência. Apps focados em "montar o treino perfeito" resolvem o problema errado para esse público.
+**Problem:** most people who start working out drop off not for lack of a workout
+plan, but for lack of consistency. Apps focused on "building the perfect workout"
+solve the wrong problem for this audience.
 
-**Público-alvo primário:** iniciantes e intermediários de academia que já sabem (ou têm um treino pronto de um personal/amigo) o que fazer, mas têm dificuldade em manter frequência. Não é o público que quer um app de periodização avançada.
+**Primary target audience:** gym beginners and intermediates who already know (or
+have a ready-made plan from a personal trainer/friend) what to do, but struggle to
+keep up a regular frequency. Not the audience looking for advanced periodization.
 
-**Não-público (por ora):** atletas avançados que precisam de controle fino de progressão de carga, deload, RPE etc. Isso é V2/V3.
-
----
-
-## 3. Escopo do MVP
-
-### 3.1 Incluído no MVP
-- Definição de rotina semanal (dias de treino x descanso)
-- Sistema de divisão de treino **A/B/C**, com rotação por sessão concluída (não por dia fixo)
-- Banco de exercícios clássicos de academia, pré-cadastrado, pesquisável
-- Checklist de exercícios por treino (feito/não feito — sem obrigar log de carga)
-- Modal de detalhe do exercício (vídeo de exemplo, instrução, registro opcional de séries)
-- Timer de treino em andamento
-- Check-in pós-treino (intensidade, humor, grupos musculares trabalhados)
-- Histórico (calendário + linha do tempo)
-- Sequência (streak) e metas semanais/mensais simples
-- Evolução física (peso, fotos, recordes pessoais)
-- Estatísticas básicas (frequência, tempo treinado, consistência)
-- Conquistas (marcos de gamificação leve)
-- Registro rápido (atalho "+" para logar treino/peso/medida/foto/recorde fora do fluxo padrão)
-- Perfil / hub de configurações
-
-### 3.2 Fora do MVP (V2+)
-- Progressão automática de carga sugerida pelo app ("na última vez você fez 60kg×8, tente 60kg×9 hoje")
-- Geração de treino por IA a partir de objetivo/equipamento/disponibilidade
-- Mapa corporal ilustrado por grupo muscular — **tentamos no design e removemos**; a ilustração não comunicava bem e o dado (frequência por grupo muscular) já é coberto de forma mais confiável pelos chips de check-in + histórico. Pode voltar em V2 com um formato mais simples (ex.: lista/heatmap tabular em vez de ilustração de corpo).
-- Deload, RPE, periodização
-- Comunidade / comparação social
+**Not the audience (for now):** advanced athletes who need fine-grained load
+progression control, deload, RPE, etc. That's V2/V3.
 
 ---
 
-## 4. Arquitetura de navegação
+## 3. MVP scope
 
-Bottom navigation com 5 abas fixas:
+### 3.1 Included in the MVP
+- Weekly routine definition (training days vs. rest days)
+- A/B/C workout split system, rotating by completed session (not by fixed weekday)
+- Pre-loaded, searchable database of classic gym exercises
+- Exercise checklist per workout (done/not done — without requiring load logging)
+- Exercise detail modal (example video, instructions, optional set logging)
+- In-progress workout timer
+- Post-workout check-in (intensity, mood, muscle groups worked)
+- History (calendar + timeline)
+- Streak and simple weekly/monthly goals
+- Physical progress (weight, photos, personal records)
+- Basic statistics (frequency, time trained, consistency)
+- Achievements (light gamification milestones)
+- Quick log ("+" shortcut to log a workout/weight/measurement/photo/record outside
+  the standard flow)
+- Profile / settings hub
+
+### 3.2 Out of MVP scope (V2+)
+- Automatic load progression suggested by the app ("last time you did 60kg×8, try
+  60kg×9 today")
+- AI-generated workouts from goal/equipment/availability
+- Illustrated body map by muscle group
+- Deload, RPE, periodization
+- Community / social comparison
+
+---
+
+## 4. Navigation architecture
+
+Bottom navigation with 5 fixed tabs:
 
 ```
-⌂ Início   ▤ Rotina   🏆 Conquistas   ◷ Histórico   ◍ Perfil
+⌂ Home   ▤ Routine   🏆 Achievements   ◷ History   ◍ Profile
 ```
 
-Fluxos modais (sem tab bar, ocupam a tela inteira "por cima" do fluxo normal):
-- Treino do dia → Exercício (modal) → Treino em andamento (timer) → Como foi? (check-in)
-- Registro rápido (sheet acionado pelo FAB "+" na Início)
+Modal flows (no tab bar, take over the full screen "on top of" the normal flow):
+- Today's workout → Exercise (modal) → Workout in progress (timer) → How did it go?
+  (check-in)
+- Quick log (sheet triggered by the "+" FAB on Home)
 
-Sub-telas alcançadas por navegação, não por tab própria:
-- Divisão A/B/C (a partir de Rotina)
-- Evolução, Estatísticas, Metas, Notificações, Preferências (a partir de Perfil)
+Sub-screens reached via navigation, not their own tab:
+- A/B/C split (from Routine)
+- Progress, Statistics, Goals, Notifications, Preferences (from Profile)
 
-### Mapa completo de telas
+### Full screen map
 
-| # | Tela | Como se chega | Tab ativa |
+| # | Screen | How you get there | Active tab |
 |---|---|---|---|
-| 01 | Início | tab bar | Início |
-| 02 | Treino do dia | "Começar treino" (Início) | Início |
-| 03 | Exercício · detalhe (modal) | tap num exercício da checklist | — (modal) |
-| 04 | Treino em andamento (timer) | "Iniciar treino" | — |
-| 05 | Como foi? (check-in) | "Finalizar treino" | — |
-| 06 | Rotina | tab bar | Rotina |
-| 07 | Divisão de treino A/B/C | "Divisão A/B/C ›" (Rotina) | Rotina |
-| 08 | Conquistas | tab bar | Conquistas |
-| 09 | Histórico | tab bar | Histórico |
-| 10 | Perfil (hub) | tab bar | Perfil |
-| 11 | Perfil · Evolução | menu (Perfil) | Perfil |
-| 12 | Perfil · Estatísticas | menu (Perfil) | Perfil |
-| 13 | Registro rápido (sheet) | FAB "+" (Início) | — (modal) |
+| 01 | Home | tab bar | Home |
+| 02 | Today's workout | "Start workout" (Home) | Home |
+| 03 | Exercise · detail (modal) | tap an exercise in the checklist | — (modal) |
+| 04 | Workout in progress (timer) | "Start workout" | — |
+| 05 | How did it go? (check-in) | "Finish workout" | — |
+| 06 | Routine | tab bar | Routine |
+| 07 | A/B/C workout split | "A/B/C Split ›" (Routine) | Routine |
+| 08 | Achievements | tab bar | Achievements |
+| 09 | History | tab bar | History |
+| 10 | Profile (hub) | tab bar | Profile |
+| 11 | Profile · Progress | menu (Profile) | Profile |
+| 12 | Profile · Statistics | menu (Profile) | Profile |
+| 13 | Quick log (sheet) | "+" FAB (Home) | — (modal) |
 
 ---
 
-## 5. Especificação funcional por tela
+## 5. Functional spec per screen
 
-### 5.1 Início
-**Objetivo:** responder "o que eu preciso fazer hoje" em menos de 3 segundos.
+### 5.1 Home
+**Goal:** answer "what do I need to do today" in under 3 seconds.
 
-Elementos, de cima para baixo:
-1. **Traço de cadência** — 7 marcas (uma por dia da semana atual), estado visual por dia: treinado / descanso / hoje / perdido / futuro.
-2. **Streak card** — número grande de dias consecutivos cumprindo a rotina + ícone de chama.
-3. **Card "treino de hoje"** — selo do treino (A/B/C), nome do grupo muscular do dia, horário, local, preview de 3 exercícios (nome + séries×reps) com indicador "+N exercícios", botão primário "Começar treino", botão secundário "Remarcar para outro dia".
-4. **Meta semanal** — barra de progresso simples (ex.: 3/4).
-5. **FAB "+"** — abre o Registro rápido.
+Elements, top to bottom:
+1. **Cadence strip** — 7 marks (one per day of the current week), visual state per
+   day: trained / rest / today / missed / future.
+2. **Streak card** — large number of consecutive days sticking to the routine + a
+   flame icon.
+3. **"Today's workout" card** — split badge (A/B/C), muscle group name for the day,
+   time, location, a preview of 3 exercises (name + sets×reps) with a "+N exercises"
+   indicator, primary "Start workout" button, secondary "Reschedule to another day"
+   button.
+4. **Weekly goal** — simple progress bar (e.g. 3/4).
+5. **"+" FAB** — opens Quick log.
 
-**Regra de negócio:** dia sem treino programado mostra estado de descanso, sem CTA de treino (não force ação em dia de descanso).
+**Business rule:** a day with no scheduled workout shows the rest state, with no
+workout CTA (don't force action on a rest day).
 
-### 5.2 Treino do dia (checklist)
-**Objetivo:** dar visibilidade do que compõe o treino antes de começar, sem obrigar a pessoa a "montar" nada.
+### 5.2 Today's workout (checklist)
+**Goal:** give visibility into what makes up the workout before starting, without
+forcing the person to "build" anything.
 
-- Cabeçalho com selo do treino (A/B/C) + nome do grupo muscular + horário.
-- Lista de exercícios: nome, séries×reps alvo, equipamento, checkbox de concluído. Cada linha é tocável e abre o modal de detalhe.
-- Linha final "+ Adicionar exercício" → busca na base de exercícios.
-- CTA primário "Iniciar treino" → abre o timer.
+- Header with split badge (A/B/C) + muscle group name + time.
+- Exercise list: name, target sets×reps, equipment, completed checkbox. Each row is
+  tappable and opens the detail modal.
+- Final "+ Add exercise" row → search in the exercise database.
+- Primary CTA "Start workout" → opens the timer.
 
-### 5.3 Exercício · detalhe (modal)
-**Objetivo:** dar contexto de execução sem sair do fluxo do treino.
+### 5.3 Exercise · detail (modal)
+**Goal:** give execution context without leaving the workout flow.
 
-Bottom sheet com:
-- Nome do exercício + tags (grupo muscular, equipamento)
-- Vídeo de exemplo (thumbnail 16:9 com play — player real na implementação)
-- Instrução curta de execução (1 parágrafo)
-- Registro de séries: linha por série (peso, reps, check de concluída) + a meta (ex. "3×12")
-- CTA "Concluir exercício"
+Bottom sheet with:
+- Exercise name + tags (muscle group, equipment)
+- Example video (16:9 thumbnail with play — real player in the implementation)
+- Short execution instructions (1 paragraph)
+- Set logging: one row per set (weight, reps, completed check) + the target (e.g.
+  "3×12")
+- "Complete exercise" CTA
 
-**Nota de dado:** o registro de peso/reps aqui é **opcional** — o MVP não exige isso para marcar o exercício como feito na checklist principal; é uma camada extra para quem quer.
+**Data note:** weight/reps logging here is **optional** — the MVP doesn't require it
+to mark the exercise as done in the main checklist; it's an extra layer for those who
+want it.
 
-### 5.4 Treino em andamento (timer)
-**Objetivo:** tela de foco durante o treino, mínima distração.
+### 5.4 Workout in progress (timer)
+**Goal:** a focus screen during the workout, minimal distraction.
 
-- Timer central (círculo) contando o tempo decorrido.
-- Tag de status ("ritmo constante hoje").
-- CTA único "Finalizar treino".
-- **Sem tab bar** — é um estado modal/imersivo.
+- Central timer (circle) counting elapsed time.
+- Status tag ("steady pace today").
+- Single CTA "Finish workout".
+- **No tab bar** — this is a modal/immersive state.
 
-### 5.5 Como foi? (check-in)
-**Objetivo:** capturar o essencial do treino em poucos toques, sem fricção.
+### 5.5 How did it go? (check-in)
+**Goal:** capture the essentials of the workout in a few taps, with minimal friction.
 
-- Duração total (calculada automaticamente pelo timer).
-- Chips de seleção múltipla "O que você treinou?" (Peito, Costas, Ombro, Bíceps, Tríceps, Perna, Abdômen, Glúteo) — pré-marcados de acordo com o treino A/B/C do dia, editáveis.
-- Seleção de intensidade (Fácil / Normal / Pesado).
-- Seleção de humor pós-treino (5 níveis, emoji).
-- CTA "Salvar registro" → volta para Início, atualiza streak e histórico.
+- Total duration (automatically computed by the timer).
+- Multi-select chips "What did you train?" (Chest, Back, Shoulders, Biceps, Triceps,
+  Legs, Abs, Glutes) — pre-selected based on the day's A/B/C workout, editable.
+- Intensity selection (Easy / Normal / Heavy).
+- Post-workout mood selection (5 levels, emoji).
+- "Save log" CTA → returns to Home, updates streak and history.
 
-### 5.6 Rotina
-**Objetivo:** definir/visualizar em quais dias da semana a pessoa pretende treinar e qual treino (A/B/C) cai em cada dia.
+### 5.6 Routine
+**Goal:** define/view which days of the week the person plans to train and which
+workout (A/B/C) falls on each day.
 
-- Lista dos 7 dias. Cada linha: badge do dia da semana, toggle liga/desliga, e se ativo, selo do treino (A/B/C) + grupo muscular + horário.
-- Dias de descanso não têm treino associado.
-- Link "Divisão A/B/C ›" leva à tela de gestão dos treinos.
+- List of the 7 days. Each row: weekday badge, on/off toggle, and if active, workout
+  badge (A/B/C) + muscle group + time.
+- Rest days have no associated workout.
+- "A/B/C Split ›" link leads to the split management screen.
 
-**Regra de negócio importante:** os dias aqui são **sugestão de agenda**, não a fonte de verdade da sequência A→B→C. A sequência real avança por treino concluído (ver 5.7).
+**Important business rule:** the days here are a **schedule suggestion**, not the
+source of truth for the A→B→C sequence. The actual sequence advances by completed
+workout (see 5.7).
 
-### 5.7 Divisão de treino (A/B/C)
-**Objetivo:** gerenciar os treinos-modelo que compõem a rotina.
+### 5.7 Workout split (A/B/C)
+**Goal:** manage the template workouts that make up the routine.
 
-- Um card por treino: selo grande, nome (Treino A/B/C), grupos musculares, nº de exercícios, duração estimada. Tap → edição da lista de exercícios (reaproveita o layout da tela 5.2).
-- Linha "+ Criar novo treino" (para D, cardio, mobilidade etc. — o sistema não é limitado a 3 letras).
-- Aviso fixo: *"Próximo da sequência: Treino B — mesmo que você troque o dia, a ordem A→B→C se mantém."*
+- One card per workout: large badge, name (Workout A/B/C), muscle groups, number of
+  exercises, estimated duration. Tap → edit the exercise list (reuses the layout of
+  screen 5.2).
+- "+ Create new workout" row (for D, cardio, mobility, etc. — the system is not
+  limited to 3 letters).
+- Fixed notice: *"Next in sequence: Workout B — even if you change the day, the
+  A→B→C order is preserved."*
 
-**Regra de negócio central do MVP:** a rotação A→B→C avança **a cada treino concluído**, independentemente de qual dia da semana ele caiu. Se a pessoa pula um dia, ela não "perde" o treino B — ele simplesmente é o próximo, seja quando for.
+**Core MVP business rule:** the A→B→C rotation advances **on every completed
+workout**, regardless of which day of the week it fell on. If the person skips a
+day, they don't "lose" workout B — it's simply next, whenever that is.
 
-### 5.8 Conquistas
-**Objetivo:** reforço positivo leve, sem virar sistema de pontos complexo.
+### 5.8 Achievements
+**Goal:** light positive reinforcement, without turning into a complex points
+system.
 
-- Barra de progresso "X de Y desbloqueadas".
-- Grid de selos (3 colunas): desbloqueado = colorido com glow; bloqueado = contorno tracejado, com contador de progresso quando aplicável (ex. "18/25").
-- Lista inicial de marcos: primeiro treino, 7 dias de rotina, 10/25/50/100 treinos, primeiro mês completo, 10h treinadas, 5 semanas consecutivas.
+- Progress bar "X of Y unlocked".
+- Badge grid (3 columns): unlocked = colored with glow; locked = dashed outline,
+  with a progress counter when applicable (e.g. "18/25").
+- Initial milestone list: first workout, 7 days on routine, 10/25/50/100 workouts,
+  first full month, 10h trained, 5 consecutive weeks.
 
-### 5.9 Histórico
-**Objetivo:** visão retrospectiva — o que eu fiz e quando.
+### 5.9 History
+**Goal:** retrospective view — what I did and when.
 
-- Calendário do mês com dias treinados marcados.
-- Linha do tempo abaixo: cada treino com data, tipo, duração, intensidade.
+- Month calendar with trained days marked.
+- Timeline below: each workout with date, type, duration, intensity.
 
-### 5.10 Perfil (hub)
-**Objetivo:** ponto central de configuração e acesso aos dados de longo prazo.
+### 5.10 Profile (hub)
+**Goal:** central hub for configuration and access to long-term data.
 
-- Resumo do usuário (avatar, nome, tempo de app).
-- Mini-stats (treinos totais, streak atual).
-- Menu: Evolução, Estatísticas, Metas, Conquistas, Notificações, Preferências.
+- User summary (avatar, name, time using the app).
+- Mini-stats (total workouts, current streak).
+- Menu: Progress, Statistics, Goals, Achievements, Notifications, Preferences.
 
-### 5.11 Perfil · Evolução
-- Peso atual + delta desde o registro anterior.
-- Comparação de fotos (antes/depois).
-- Lista de recordes pessoais por exercício (ex.: Supino 80kg).
+### 5.11 Profile · Progress
+- Current weight + delta since the previous entry.
+- Photo comparison (before/after).
+- List of personal records per exercise (e.g. Bench press 80kg).
 
-### 5.12 Perfil · Estatísticas
-- Cards de números do mês: treinos, tempo total, % de consistência, streak.
-- Gráfico de barras simples (treinos por semana).
-- Insight textual gerado a partir do histórico (ex.: "Você costuma treinar melhor às quartas-feiras") — regra simples, não precisa de ML no MVP.
+### 5.12 Profile · Statistics
+- Monthly number cards: workouts, total time, % consistency, streak.
+- Simple bar chart (workouts per week).
+- Textual insight generated from history (e.g. "You tend to train better on
+  Wednesdays") — a simple rule, no ML needed in the MVP.
 
-### 5.13 Registro rápido
-**Objetivo:** permitir logar algo fora do fluxo padrão (sem precisar "iniciar um treino" formalmente).
+### 5.13 Quick log
+**Goal:** allow logging something outside the standard flow (without needing to
+formally "start a workout").
 
-- Sheet com atalhos: Treino, Peso, Medida, Foto, Recorde, Cancelar.
+- Sheet with shortcuts: Workout, Weight, Measurement, Photo, Record, Cancel.
 
 ---
 
-## 6. Modelo de dados (visão lógica)
+## 6. Data model (logical view)
 
-Os arquivos `exercises.json` e `training_splits.json` (entregues junto com o design) já modelam a base de exercícios e as divisões A/B/C. As entidades abaixo cobrem o restante do produto e servem de referência para as tabelas Room:
+The `exercises.json` and `training_splits.json` files (delivered together with the
+design) already model the exercise database and the A/B/C splits. The entities below
+cover the rest of the product and serve as a reference for the Room tables:
 
 ```
 User
@@ -215,7 +258,7 @@ Exercise                       (seed: exercises.json)
 TrainingSplit                  (seed: training_splits.json)
  └─ id, label (A/B/C...), name, muscle_groups[], estimated_minutes
 
-SplitExercise                  (junção TrainingSplit ↔ Exercise)
+SplitExercise                  (join TrainingSplit ↔ Exercise)
  └─ split_id, exercise_id, sets, reps, order
 
 RoutineDay
@@ -223,16 +266,16 @@ RoutineDay
 
 WorkoutSession
  └─ id, date, split_id, started_at, finished_at, duration_seconds,
-    intensity (fácil/normal/pesado), mood (1-5), muscle_groups_tagged[]
+    intensity (easy/normal/heavy), mood (1-5), muscle_groups_tagged[]
 
-SessionExerciseLog              (opcional, por sessão)
+SessionExerciseLog              (optional, per session)
  └─ session_id, exercise_id, set_number, weight, reps, completed
 
 BodyMeasurement
  └─ date, weight, arm, chest, waist, hip, thigh, calf
 
 ProgressPhoto
- └─ date, angle (frente/lado/costas), uri
+ └─ date, angle (front/side/back), uri
 
 PersonalRecord
  └─ exercise_id, weight, date
@@ -240,138 +283,187 @@ PersonalRecord
 Achievement
  └─ id, name, icon, unlocked_at (nullable), progress_current, progress_target
 
-StreakState (derivado, pode ser calculado on-the-fly)
+StreakState (derived, can be computed on-the-fly)
  └─ current_streak, longest_streak, last_trained_date
 ```
 
-**Observação de arquitetura:** `WorkoutSession.split_id` é o que define a rotação A→B→C — a "próxima letra" é sempre calculada como a próxima na sequência definida em `TrainingSplit`, a partir da última sessão concluída. `RoutineDay.split_id_hint` é só uma sugestão de agenda para a UI, não uma regra rígida.
+**Architecture note:** `WorkoutSession.split_id` is what defines the A→B→C
+rotation — the "next letter" is always computed as the next one in the sequence
+defined in `TrainingSplit`, based on the last completed session.
+`RoutineDay.split_id_hint` is only a scheduling suggestion for the UI, not a hard
+rule.
 
 ---
 
-## 7. Sistema de design
+## 7. Design system
 
-### 7.1 Direção de marca
-Não é um app "gym bro" (vermelho/preto agressivo) nem o dark-mode genérico. É um **painel de constância**: fundo quase-preto com leve tom azulado, acentos com trabalho semântico específico, tipografia técnica com um único elemento assinatura recorrente.
+### 7.1 Brand direction
+Not a "gym bro" app (aggressive red/black) nor a generic dark mode. It's a
+**consistency dashboard**: near-black background with a slight blue tint, accents
+with specific semantic jobs, technical typography with a single recurring signature
+element.
 
-### 7.2 Paleta de cores
+### 7.2 Color palette
 
-| Token | Hex | Uso |
+| Token | Hex | Use |
 |---|---|---|
-| `--page` | `#0B0C10` | fundo da página/app shell |
-| `--bg` | `#0F1115` | fundo das telas |
+| `--page` | `#0B0C10` | page/app shell background |
+| `--bg` | `#0F1115` | screen background |
 | `--surface` | `#181B21` | cards |
-| `--surface-2` | `#1F232B` | elementos dentro de cards (rows, inputs) |
-| `--surface-3` | `#262B34` | elementos de destaque neutro (trilhos de barra, bordas de foto) |
-| `--line` | `#2A2E37` | bordas, divisores |
-| `--ember` | `#FF6A3D` | ação/energia — streak, CTA primário, dias treinados, Treino A |
-| `--ember-dim` | `#7A3B27` | borda do card de streak |
-| `--gold` | `#FFC857` | "agora"/atenção — dia atual, humor, Treino B |
-| `--pulse` | `#5EEAD4` | dado neutro de progresso — delta de peso, Treino C |
-| `--text` | `#F5F3EE` | texto principal |
-| `--text-muted` | `#90959F` | texto secundário |
-| `--text-faint` | `#565A63` | texto terciário/desabilitado |
+| `--surface-2` | `#1F232B` | elements inside cards (rows, inputs) |
+| `--surface-3` | `#262B34` | neutral highlight elements (bar tracks, photo borders) |
+| `--line` | `#2A2E37` | borders, dividers |
+| `--ember` | `#FF6A3D` | action/energy — streak, primary CTA, trained days, Workout A |
+| `--ember-dim` | `#7A3B27` | streak card border |
+| `--gold` | `#FFC857` | "now"/attention — current day, mood, Workout B |
+| `--pulse` | `#5EEAD4` | neutral progress data — weight delta, Workout C |
+| `--text` | `#F5F3EE` | primary text |
+| `--text-muted` | `#90959F` | secondary text |
+| `--text-faint` | `#565A63` | tertiary/disabled text |
 
-**Regra de uso:** cada cor tem um trabalho fixo, não é decorativa. Ember = ação/hoje. Gold = atenção/agora. Pulse = dado neutro. Evitar usar as três de forma intercambiável.
+**Usage rule:** every color has a fixed job, not a decorative one. Ember = action/
+today. Gold = attention/now. Pulse = neutral data. Avoid using the three
+interchangeably.
 
-### 7.3 Tipografia
+### 7.3 Typography
 
-| Papel | Fonte | Peso | Uso |
+| Role | Font | Weight | Use |
 |---|---|---|---|
-| Display | **Space Grotesk** | 600–700 | títulos de tela, números grandes (streak, timer, peso) |
-| Corpo | **Inter** | 400–600 | texto corrido, labels, botões |
-| Utilitário/dado | **JetBrains Mono** | 400–600 | horários, datas, timer, estatísticas, siglas de dia da semana, eyebrows |
+| Display | **Space Grotesk** | 600–700 | screen titles, large numbers (streak, timer, weight) |
+| Body | **Inter** | 400–600 | running text, labels, buttons |
+| Utility/data | **JetBrains Mono** | 400–600 | times, dates, timer, statistics, weekday abbreviations, eyebrows |
 
-Escala aproximada (mobile):
-- Número hero (streak/peso): 40px / 700 / Space Grotesk
-- Título de tela (`h2.title`): 21px / 700 / Space Grotesk
-- Nome de card (split/exercício): 14.5px / 700 / Space Grotesk
-- Corpo: 12–13px / 400–500 / Inter
+Approximate scale (mobile):
+- Hero number (streak/weight): 40px / 700 / Space Grotesk
+- Screen title (`h2.title`): 21px / 700 / Space Grotesk
+- Card name (split/exercise): 14.5px / 700 / Space Grotesk
+- Body: 12–13px / 400–500 / Inter
 - Eyebrow/label (uppercase, letter-spacing 0.1em): 10.5–12px / JetBrains Mono
-- Micro (captions, contadores): 9–10px / JetBrains Mono
+- Micro (captions, counters): 9–10px / JetBrains Mono
 
-### 7.4 Forma e espaçamento
+### 7.4 Shape and spacing
 
-Depois de duas iterações (raio cortante demais → depois arredondamento excessivo), o padrão final é **moderado**:
+After two iterations (too sharp a radius → then excessive rounding), the final
+standard is **moderate**:
 
-| Token | Valor | Uso |
+| Token | Value | Use |
 |---|---|---|
-| `--radius-lg` | 18px | cards grandes, sheets |
-| `--radius-md` | 12px | cards padrão, botões |
-| `--radius-sm` | 8px | inputs, badges pequenos |
-| — | 50% | timer (círculo), avatar circular quando aplicável, mood buttons |
-| — | 16–20px | chips/pills (formato cápsula) |
-| — | 34px | moldura do celular (canto de hardware, não é um valor de design system) |
+| `--radius-lg` | 18px | large cards, sheets |
+| `--radius-md` | 12px | default cards, buttons |
+| `--radius-sm` | 8px | inputs, small badges |
+| — | 50% | timer (circle), circular avatar where applicable, mood buttons |
+| — | 16–20px | chips/pills (capsule shape) |
+| — | 34px | phone frame (hardware corner, not a design system value) |
 
-Grid de conteúdo: padding lateral de tela = 18px. Gap padrão entre blocos = 12–16px.
+Content grid: screen side padding = 18px. Default gap between blocks = 12–16px.
 
-### 7.5 Elemento-assinatura: traço de cadência
+### 7.5 Signature element: cadence strip
 
-O elemento recorrente que dá identidade ao produto: uma fileira de 7 marcas verticais (uma por dia da semana), usada na Início. Estados:
+The recurring element that gives the product its identity: a row of 7 vertical
+marks (one per weekday), used on Home. States:
 
-- **Treinado**: traço alto (24px), cor ember, leve glow.
-- **Descanso planejado**: traço curto (10px), `--surface-3`, sem glow.
-- **Hoje**: traço alto (24px), cor gold, glow.
-- **Perdido**: traço alto (24px), vazado, borda tracejada `--text-faint`.
-- **Futuro**: traço curto (10px), `--surface-2`.
+- **Trained**: tall mark (24px), ember color, slight glow.
+- **Planned rest**: short mark (10px), `--surface-3`, no glow.
+- **Today**: tall mark (24px), gold color, glow.
+- **Missed**: tall mark (24px), hollow, dashed `--text-faint` border.
+- **Future**: short mark (10px), `--surface-2`.
 
-Esse padrão visual (cheio/vazado/curto) é o que também informa o calendário do Histórico, mantendo a mesma linguagem em escala de mês.
+This visual pattern (filled/hollow/short) also informs the History calendar,
+keeping the same visual language at month scale.
 
-### 7.6 Selo de treino A/B/C
+### 7.6 A/B/C workout badge
 
-Componente reutilizado em Início, Rotina, Treino do dia e Divisão de treino:
+Component reused on Home, Routine, Today's workout, and Workout split:
 
-- Formato: quadrado com raio 7px (versão pequena, 22px) ou 10px (versão grande, 34px).
-- Letra em Space Grotesk 700.
-- Cor por split: A = ember (fundo ember a 16% opacidade), B = gold (fundo gold a 16%), C = pulse (fundo pulse a 16%). Splits além de C devem ciclar para uma quarta cor neutra ou reutilizar o padrão com um indicador extra — **não está definido no MVP**, ver seção 9.
+- Shape: square with 7px radius (small version, 22px) or 10px (large version, 34px).
+- Letter in Space Grotesk 700.
+- Color by split: A = ember (ember background at 16% opacity), B = gold (gold
+  background at 16%), C = pulse (pulse background at 16%). Splits beyond C should
+  either cycle to a fourth neutral color or reuse the pattern with an extra
+  indicator — **not defined in the MVP**, see section 9.
 
-### 7.7 Componentes principais
+### 7.7 Main components
 
-- **Botão primário**: fundo ember sólido, texto escuro (`#1a0e08`), Space Grotesk 700, raio 12px.
-- **Botão secundário/ghost**: borda `--line`, texto `--text-muted`, transparente.
-- **Chip**: pílula, borda `--line` no estado inativo; borda + fundo ember a 14% + texto ember no estado ativo.
-- **Card**: `--surface` + borda `--line` 1px + raio 18px.
-- **Bottom sheet/modal**: backdrop `rgba(5,6,10,0.72)`, sheet com raio 22px só no topo, handle central de 36×4px.
-- **Toggle switch**: trilho 38×22px, thumb circular; ligado = fundo ember.
-- **Bottom navigation**: 5 itens, ícone + label em mono, item ativo em ember com ponto indicador abaixo.
+- **Primary button**: solid ember background, dark text (`#1a0e08`), Space Grotesk
+  700, 12px radius.
+- **Secondary/ghost button**: `--line` border, `--text-muted` text, transparent.
+- **Chip**: pill shape, `--line` border in inactive state; border + ember background
+  at 14% + ember text in active state.
+- **Card**: `--surface` + 1px `--line` border + 18px radius.
+- **Bottom sheet/modal**: `rgba(5,6,10,0.72)` backdrop, sheet with 22px radius on
+  top corners only, 36×4px centered handle.
+- **Toggle switch**: 38×22px track, circular thumb; on = ember background.
+- **Bottom navigation**: 5 items, icon + mono label, active item in ember with an
+  indicator dot below.
 
-### 7.8 Iconografia
+### 7.8 Iconography
 
-Ícones da tab bar são glifos unicode simples (⌂ ▤ 🏆 ◷ ◍), não uma biblioteca de ícones ilustrados — mantém a linguagem "técnica/painel" e evita depender de um icon set externo antes da implementação real (que deve trocar por uma lib de ícones vetoriais consistente, ex. Material Symbols ou Phosphor, mantendo pesos e proporções similares).
+Tab bar icons are simple unicode glyphs (⌂ ▤ 🏆 ◷ ◍), not an illustrated icon
+library — this keeps the "technical/dashboard" language and avoids depending on an
+external icon set before the real implementation (which should swap in a consistent
+vector icon library, e.g. Material Symbols or Phosphor, keeping similar weights and
+proportions).
 
-### 7.9 Motion (para implementação — não prototipado no mockup estático)
-- Transições de tela: slide horizontal padrão de navegação (não definido em detalhe — seguir Material Motion padrão do Compose Navigation).
-- Bottom sheets: slide-up + fade do backdrop, ~200–250ms.
-- Toggle/checkbox: transição de 150ms na posição do thumb (já especificado no CSS de referência).
-- Evitar animação decorativa fora de: feedback de conclusão de treino/exercício, abertura de sheets, e o glow do streak quando ele incrementa.
-
----
-
-## 8. Notas para implementação em Jetpack Compose
-
-- Os tokens de cor (seção 7.2) mapeiam diretamente para `Color.kt` / `ColorScheme` customizado (o produto é dark-first; não há especificação de light mode neste MVP).
-- Os três pesos de raio (7.4) viram `Shapes` no `MaterialTheme` (small/medium/large).
-- Tipografia (7.3) vira `Typography` customizado — três `FontFamily` (Space Grotesk, Inter, JetBrains Mono via `google-fonts` provider ou embutidas em `res/font`).
-- O traço de cadência (7.5) e o selo A/B/C (7.6) devem virar **composables reutilizáveis** (`CadenceRow`, `SplitBadge`) desde o início — são usados em no mínimo 3 telas cada.
-- O modal de exercício e o registro rápido são bons candidatos a `ModalBottomSheet` do Compose.
-- O timer (5.4) precisa de um `Service`/`ViewModel` que sobreviva a mudanças de configuração e, idealmente, rode em foreground service se o app puder ser minimizado durante o treino.
-
----
-
-## 9. Questões em aberto
-
-1. **Divisão além de C (D, E...)**: o design permite criar novos treinos, mas o sistema de cor dos selos só cobre A/B/C. Definir paleta estendida ou trocar para um esquema procedural (hash da letra → cor) antes de implementar.
-2. **Peso/reps no check-in vs. no modal**: hoje o registro de série é opcional e vive só no modal do exercício. Decidir se isso deve refletir automaticamente em Recordes Pessoais (Evolução) quando a carga registrada supera o recorde atual.
-3. **Regra de "treino perdido"**: o traço de cadência marca visualmente um dia como "perdido", mas a regra de negócio de quando isso acontece (fim do dia? N horas depois do horário programado?) não está definida.
-4. **Notificações**: mencionadas no menu de Perfil, mas o conteúdo/timing dos lembretes (do documento original: lembrete pré-treino, lembrete de treino perdido, lembrete diário) ainda não tem tela própria nem regras de disparo especificadas.
-5. **Metas**: item de menu criado em Perfil, sem tela — hoje a meta semanal vive só como um valor fixo (3/4) no card da Início.
+### 7.9 Motion (for implementation — not prototyped in the static mockup)
+- Screen transitions: standard horizontal navigation slide (not defined in detail —
+  follow Compose Navigation's default Material Motion).
+- Bottom sheets: slide-up + backdrop fade, ~200–250ms.
+- Toggle/checkbox: 150ms thumb position transition (already specified in the
+  reference CSS).
+- Avoid decorative animation outside of: exercise/workout completion feedback,
+  sheet opening, and the streak glow when it increments.
 
 ---
 
-## 10. Métricas de sucesso (sugestão)
+## 8. Notes for Jetpack Compose implementation
 
-Como o produto é sobre consistência, as métricas norte devem refletir isso, não volume de uso:
+- The color tokens (section 7.2) map directly to `Color.kt` / a custom
+  `ColorScheme` (the product is dark-first; no light mode spec in this MVP).
+- The three radius weights (7.4) become `Shapes` in `MaterialTheme`
+  (small/medium/large).
+- Typography (7.3) becomes a custom `Typography` — three `FontFamily`s (Space
+  Grotesk, Inter, JetBrains Mono via the `google-fonts` provider or bundled in
+  `res/font`).
+- The cadence strip (7.5) and the A/B/C badge (7.6) should become **reusable
+  composables** (`CadenceRow`, `SplitBadge`) from the start — each is used on at
+  least 3 screens.
+- The exercise modal and quick log are good candidates for Compose's
+  `ModalBottomSheet`.
+- The timer (5.4) needs a `Service`/`ViewModel` that survives configuration
+  changes and, ideally, runs as a foreground service in case the app can be
+  minimized during the workout.
 
-- **Retenção de streak**: % de usuários que mantêm streak ≥ 1 depois de 2, 4 e 8 semanas.
-- **Taxa de conclusão de treino programado**: treinos concluídos ÷ treinos programados na Rotina.
-- **Uso do "Remarcar"**: sinal saudável se usado (mostra que a pessoa está ajustando em vez de abandonar) — vigiar se está sendo usado como forma de evitar o treino indefinidamente.
-- **Profundidade de registro**: % de check-ins com chips de grupo muscular preenchidos vs. pulados (indica se o dado é considerado útil o suficiente pelo usuário para preencher).
+---
+
+## 9. Open questions
+
+1. **Splits beyond C (D, E...)**: the design allows creating new workouts, but the
+   badge color system only covers A/B/C. Define an extended palette or switch to a
+   procedural scheme (hash of the letter → color) before implementing.
+2. **Weight/reps in check-in vs. in the modal**: today, set logging is optional and
+   only lives in the exercise modal. Decide whether this should automatically feed
+   Personal Records (Progress) when the logged load beats the current record.
+3. **"Missed workout" rule**: the cadence strip visually marks a day as "missed",
+   but the business rule for when that happens (end of day? N hours after the
+   scheduled time?) is not defined.
+4. **Notifications**: mentioned in the Profile menu, but the content/timing of the
+   reminders (from the original document: pre-workout reminder, missed workout
+   reminder, daily reminder) still has no dedicated screen or trigger rules.
+5. **Goals**: a menu item created under Profile, with no screen — today the weekly
+   goal only lives as a fixed value (3/4) on the Home card.
+
+---
+
+## 10. Success metrics (suggested)
+
+Since the product is about consistency, the north-star metrics should reflect that,
+not usage volume:
+
+- **Streak retention**: % of users who keep a streak ≥ 1 after 2, 4, and 8 weeks.
+- **Scheduled workout completion rate**: completed workouts ÷ workouts scheduled in
+  Routine.
+- **"Reschedule" usage**: a healthy signal if used (shows the person is adjusting
+  instead of giving up) — watch for it being used as a way to indefinitely avoid the
+  workout.
+- **Logging depth**: % of check-ins with muscle group chips filled in vs. skipped
+  (indicates whether the data is considered useful enough by the user to fill in).

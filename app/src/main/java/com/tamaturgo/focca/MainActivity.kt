@@ -11,8 +11,15 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import com.tamaturgo.focca.ui.theme.FoccaTheme
+import com.tamaturgo.focca.presentation.theme.FoccaTheme
+import dagger.hilt.android.AndroidEntryPoint
 
+/**
+ * Single-activity host for the Compose UI tree. Annotated with [AndroidEntryPoint] so that
+ * this activity (and the composables/ViewModels it hosts) can receive Hilt-injected
+ * dependencies.
+ */
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

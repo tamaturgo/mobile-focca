@@ -1,4 +1,4 @@
-package com.tamaturgo.focca.ui.theme
+package com.tamaturgo.focca.presentation.theme
 
 import androidx.compose.material3.Typography
 import androidx.compose.ui.text.TextStyle

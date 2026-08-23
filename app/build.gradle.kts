@@ -1,6 +1,8 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
+    alias(libs.plugins.ksp)
+    alias(libs.plugins.hilt.android)
 }
 
 android {
@@ -66,4 +68,21 @@ dependencies {
     androidTestImplementation(libs.androidx.ui.test.junit4)
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
+
+    // Hilt - dependency injection
+    implementation(libs.hilt.android)
+    ksp(libs.hilt.compiler)
+
+    // Room - local persistence
+    implementation(libs.room.runtime)
+    implementation(libs.room.ktx)
+    ksp(libs.room.compiler)
+
+    // Coroutines
+    implementation(libs.kotlinx.coroutines.android)
+}
+
+ksp {
+    // Room schema history, used to validate migrations across versions.
+    arg("room.schemaLocation", "$projectDir/schemas")
 }

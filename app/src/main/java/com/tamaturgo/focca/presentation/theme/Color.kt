@@ -1,4 +1,4 @@
-package com.tamaturgo.focca.ui.theme
+package com.tamaturgo.focca.presentation.theme
 
 import androidx.compose.ui.graphics.Color
 

@@ -1,3 +1,125 @@
 <resources>
+
+    <!-- App -->
     <string name="app_name">Focca</string>
+
+
+    <!-- Shared actions -->
+    <string name="action_begin_session">Begin session</string>
+    <string name="action_complete_exercise">Complete exercise</string>
+    <string name="action_finish_workout">Finish workout</string>
+    <string name="action_reschedule_workout">Reschedule to another day</string>
+    <string name="action_save_log">Save log</string>
+    <string name="action_start_workout">Start workout</string>
+
+
+    <!-- Shared labels -->
+    <string name="label_current_streak">current streak</string>
+    <string name="workout_label_format">Workout %s</string>
+
+
+    <!-- Home -->
+    <string name="home_extra_exercises_format">+ %d exercises</string>
+    <string name="home_streak_caption">day streak\nsticking to your routine</string>
+    <string name="home_weekly_goal_label">Weekly goal</string>
+    <string name="home_workout_meta_format">%1$s · %2$d exercises · %3$s</string>
+
+
+    <!-- Routine -->
+    <string name="routine_split_menu_subtitle">3 workouts · automatic rotation</string>
+    <string name="routine_title">Your week</string>
+    <string name="split_menu_title">A / B / C Split</string>
+
+
+    <!-- A/B/C split list -->
+    <string name="splitlist_create_workout">Create new workout</string>
+    <string name="splitlist_create_workout_hint">E.g. Workout D, Cardio, Mobility</string>
+    <string name="splitlist_exercise_count_format">%1$d exercises · %2$s</string>
+    <string name="splitlist_next_format">Next in rotation: %s — even if you change the day, the A→B→C order stays the same.</string>
+    <string name="splitlist_subtitle">Rotates automatically each workout — not fixed to a specific day</string>
+
+
+    <!-- Achievements -->
+    <string name="achievements_title">Achievements</string>
+    <string name="achievements_unlocked_format">%1$d of %2$d unlocked</string>
+
+
+    <!-- History -->
+    <string name="history_timeline_label">Timeline</string>
+
+
+    <!-- Profile -->
+    <string name="profile_menu_evolution">Evolution</string>
+    <string name="profile_menu_goals">Goals</string>
+    <string name="profile_menu_notifications">Notifications</string>
+    <string name="profile_menu_preferences">Preferences</string>
+    <string name="profile_menu_statistics">Statistics</string>
+    <string name="profile_total_workouts_label">total workouts</string>
+
+
+    <!-- Evolution -->
+    <string name="evolution_current_weight_label">Current weight</string>
+    <string name="evolution_personal_records_label">Personal records</string>
+    <string name="evolution_photos_label">Progress photos</string>
+
+
+    <!-- Statistics -->
+    <string name="statistics_consistency">consistency</string>
+    <string name="statistics_current_streak">current streak</string>
+    <string name="statistics_insight">You tend to train better on Wednesdays.</string>
+    <string name="statistics_training_time">training time</string>
+    <string name="statistics_workouts">workouts</string>
+    <string name="statistics_workouts_per_week">Workouts per week</string>
+    <string name="statistics_week_1">W1</string>
+    <string name="statistics_week_2">W2</string>
+    <string name="statistics_week_3">W3</string>
+    <string name="statistics_week_4">W4</string>
+
+
+    <!-- Months -->
+    <string name="month_january">January</string>
+    <string name="month_february">February</string>
+    <string name="month_march">March</string>
+    <string name="month_april">April</string>
+    <string name="month_may">May</string>
+    <string name="month_june">June</string>
+    <string name="month_july">July</string>
+    <string name="month_august">August</string>
+    <string name="month_september">September</string>
+    <string name="month_october">October</string>
+    <string name="month_november">November</string>
+    <string name="month_december">December</string>
+
+
+    <!-- Today's workout -->
+    <string name="today_workout_add_exercise">Add exercise</string>
+    <string name="today_workout_add_exercise_subtitle">Search the exercise library</string>
+
+
+    <!-- Exercise detail -->
+    <string name="exercise_detail_set_goal_format">Sets · goal %s</string>
+
+
+    <!-- Workout timer -->
+    <string name="workout_timer_focus_tag">Full focus today</string>
+    <string name="workout_timer_in_progress_label">in progress</string>
+    <string name="workout_timer_started_at_format">Workout started at %s</string>
+
+
+    <!-- Post-workout check-in -->
+    <string name="checkin_intensity_label">Intensity</string>
+    <string name="checkin_mood_label">How are you feeling?</string>
+    <string name="checkin_muscle_groups_label">What did you train?</string>
+    <string name="checkin_title">Workout complete</string>
+
+
+    <!-- Quick log -->
+    <string name="quicklog_action_cancel">Cancel</string>
+    <string name="quicklog_action_measurement">Measurement</string>
+    <string name="quicklog_action_photo">Photo</string>
+    <string name="quicklog_action_record">Record</string>
+    <string name="quicklog_action_weight">Weight</string>
+    <string name="quicklog_action_workout">Workout</string>
+    <string name="quicklog_title">Log now</string>
+
 </resources>

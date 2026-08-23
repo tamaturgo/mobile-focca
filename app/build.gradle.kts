@@ -72,6 +72,10 @@ dependencies {
     // Hilt - dependency injection
     implementation(libs.hilt.android)
     ksp(libs.hilt.compiler)
+    implementation(libs.hilt.navigation.compose)
+
+    // Navigation
+    implementation(libs.androidx.navigation.compose)
 
     // Room - local persistence
     implementation(libs.room.runtime)

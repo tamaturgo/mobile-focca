@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.NavigationBarItemDefaults
@@ -16,7 +17,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
@@ -52,14 +55,23 @@ fun FoccaBottomBar(navController: NavHostController) {
                 },
                 icon = {
                     Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                        Text(text = screen.icon)
+                        Icon(
+                            imageVector = if (isSelected) screen.selectedIcon else screen.unselectedIcon,
+                            contentDescription = screen.label
+                        )
                         if (isSelected) {
                             ActiveIndicatorDot()
                         }
                     }
                 },
                 label = {
-                    Text(text = screen.label, fontFamily = FontFamily.Monospace)
+                    Text(
+                        text = screen.label,
+                        fontFamily = FontFamily.Monospace,
+                        fontSize = 10.sp,
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis
+                    )
                 },
                 colors = NavigationBarItemDefaults.colors(
                     selectedIconColor = FoccaEmber,
